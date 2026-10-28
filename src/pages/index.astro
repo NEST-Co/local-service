@@ -1,0 +1,31 @@
+---
+import Service from '../layouts/Service.astro';
+import Photo from '../components/Photo.astro';
+import { biz, services } from '../data/business';
+---
+<Service title="Heating and air conditioning in Northfield" description="Furnace and air conditioning repair, tune-ups and installation in Northfield and nearby towns. Call or request a quote online.">
+  <div class="hero"><div class="wrap">
+    <div>
+      <h1>Heat and cooling that works when you need it</h1>
+      <p>Repairs, tune-ups and new systems for homes in Northfield and five nearby towns. Clear prices in writing before any work begins.</p>
+      <div class="actions">
+        <a class="btn" href="/quote">Get a free quote</a>
+        <a class="btn alt" href={`tel:${biz.phoneHref}`}>Call {biz.phone}</a>
+      </div>
+    </div>
+    <Photo name="hero" alt="A small house with an outdoor air conditioning unit beside it." eager />
+  </div></div>
+  <div class="wrap">
+    <ul class="badges" aria-label="Why customers choose us">
+      <li>Licensed and insured</li><li>Price in writing first</li><li>Emergency service 24 hours</li><li>Two-year repair warranty</li>
+    </ul>
+    <h2>What we do</h2>
+    <ul class="cards">{services.map((s) => (
+      <li class="card"><Photo name={s.image} sizes="(min-width: 700px) 33vw, 100vw" />
+        <div class="body"><h3><a href={`/services/${s.slug}`}>{s.title}</a></h3><p>{s.short}</p></div></li>
+    ))}</ul>
+    <h2>Where we work</h2>
+    <p>We serve {biz.areas.slice(0, -1).join(', ')} and {biz.areas.at(-1)}. <a href="/service-area">Check your area</a>.</p>
+    <p>The badges above and the warranty are sample claims for this fictional company.</p>
+  </div>
+</Service>

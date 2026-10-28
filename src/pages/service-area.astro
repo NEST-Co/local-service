@@ -1,0 +1,13 @@
+---
+import Service from '../layouts/Service.astro';
+import { biz } from '../data/business';
+---
+<Service title="Service area" description="We serve Northfield, Maple Heights, Cedar Falls, Brookside, Oak Hollow and Stonebridge.">
+  <div class="wrap prose">
+    <h1>Service area</h1>
+    <p>We work in these towns:</p>
+    <ul class="checks">{biz.areas.map((a) => <li>{a}</li>)}</ul>
+    <p>Not sure if we cover your address? <a href={`tel:${biz.phoneHref}`}>Call {biz.phone}</a> or <a href="/quote">send a quote request</a> with your ZIP code, and we will tell you.</p>
+    <p>All towns here are invented for this concept site.</p>
+  </div>
+</Service>

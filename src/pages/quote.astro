@@ -1,0 +1,114 @@
+---
+import Service from '../layouts/Service.astro';
+import { biz, services } from '../data/business';
+---
+<Service title="Get a free quote" description="Tell us what is wrong and where you are. We reply within one business day.">
+  <div class="wrap">
+    <h1>Get a free quote</h1>
+    <p>Tell us what you need. We reply within one business day. <strong>This is a concept site: nothing you type is sent anywhere.</strong></p>
+    <p class="urgent"><strong>No heat or cooling right now?</strong> Please call <a href={`tel:${biz.phoneHref}`}>{biz.phone}</a> instead. We answer 24 hours a day.</p>
+
+    <div id="summary" class="summary" role="alert" tabindex="-1" hidden>
+      <h2 id="summary-title">Please fix these problems</h2>
+      <ul id="summary-list"></ul>
+    </div>
+    <div id="done" class="success" tabindex="-1" hidden>
+      <h2>Thank you, this is a demo</h2>
+      <p>On a real site, your request would now go to the office. Nothing was sent.</p>
+    </div>
+
+    <form id="quote" novalidate>
+      <p class="hint">Fields marked required must be filled in.</p>
+      <div class="hp" aria-hidden="true"><label for="company">Leave this empty</label><input id="company" name="company" type="text" tabindex="-1" autocomplete="off" /></div>
+      <div>
+        <label for="name">Your name <span class="hint">(required)</span></label>
+        <input id="name" name="name" type="text" autocomplete="name" required aria-describedby="name-err" />
+        <p id="name-err" class="error" hidden></p>
+      </div>
+      <div>
+        <label for="phone">Phone number <span class="hint">(required)</span></label>
+        <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required aria-describedby="phone-hint phone-err" />
+        <p id="phone-hint" class="hint">Example: 555 010 0123</p>
+        <p id="phone-err" class="error" hidden></p>
+      </div>
+      <div>
+        <label for="email">Email <span class="hint">(optional)</span></label>
+        <input id="email" name="email" type="email" autocomplete="email" aria-describedby="email-err" />
+        <p id="email-err" class="error" hidden></p>
+      </div>
+      <div>
+        <label for="service">What do you need help with? <span class="hint">(required)</span></label>
+        <select id="service" name="service" required aria-describedby="service-err">
+          <option value="">Choose one</option>
+          {services.filter((s) => s.slug !== 'emergency-service').map((s) => <option>{s.title}</option>)}
+          <option>Not sure</option>
+        </select>
+        <p id="service-err" class="error" hidden></p>
+      </div>
+      <div>
+        <label for="zip">ZIP code <span class="hint">(required)</span></label>
+        <input id="zip" name="zip" type="text" autocomplete="postal-code" inputmode="numeric" maxlength="5" required aria-describedby="zip-hint zip-err" />
+        <p id="zip-hint" class="hint">Five digits. We use it to check that we cover your address.</p>
+        <p id="zip-err" class="error" hidden></p>
+      </div>
+      <fieldset>
+        <legend>How should we contact you?</legend>
+        <div class="choice"><input type="radio" id="c-phone" name="contact" value="phone" checked /><label for="c-phone">Phone call</label></div>
+        <div class="choice"><input type="radio" id="c-text" name="contact" value="text" /><label for="c-text">Text message</label></div>
+        <div class="choice"><input type="radio" id="c-email" name="contact" value="email" /><label for="c-email">Email</label></div>
+      </fieldset>
+      <div>
+        <label for="details">Anything we should know? <span class="hint">(optional)</span></label>
+        <textarea id="details" name="details" rows="4"></textarea>
+      </div>
+      <div><button class="btn" type="submit">Send quote request</button></div>
+    </form>
+  </div>
+</Service>
+<script define:vars={{ zips: biz.zips }}>
+  const form = document.getElementById('quote');
+  const summary = document.getElementById('summary');
+  const list = document.getElementById('summary-list');
+  const done = document.getElementById('done');
+  const rules = {
+    name: (v) => (v.trim() ? '' : 'Enter your name.'),
+    phone: (v) => (v.replace(/\D/g, '').length >= 10 ? '' : 'Enter a phone number with area code, at least 10 digits.'),
+    email: (v) => (!v || /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v) ? '' : 'Enter an email address like name@example.com, or leave it empty.'),
+    service: (v) => (v ? '' : 'Choose what you need help with.'),
+    zip: (v) => (/^\d{5}$/.test(v) ? '' : 'Enter a five-digit ZIP code.'),
+  };
+  const labels = { name: 'Your name', phone: 'Phone number', email: 'Email', service: 'What do you need help with', zip: 'ZIP code' };
+
+  function check(id) {
+    const el = document.getElementById(id), msg = document.getElementById(id + '-err');
+    const err = rules[id](el.value);
+    msg.hidden = !err; msg.textContent = err;
+    err ? el.setAttribute('aria-invalid', 'true') : el.removeAttribute('aria-invalid');
+    return err;
+  }
+  for (const id of Object.keys(rules)) document.getElementById(id).addEventListener('blur', () => { if (document.getElementById(id).value || document.getElementById(id).hasAttribute('aria-invalid')) check(id); });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    done.hidden = true;
+    if (form.company.value) return; // honeypot
+    const problems = Object.keys(rules).map((id) => [id, check(id)]).filter(([, err]) => err);
+    list.replaceChildren();
+    if (problems.length) {
+      for (const [id, err] of problems) {
+        const li = document.createElement('li'), a = document.createElement('a');
+        a.href = '#' + id; a.textContent = `${labels[id]}: ${err}`;
+        a.addEventListener('click', (ev) => { ev.preventDefault(); document.getElementById(id).focus(); });
+        li.append(a); list.append(li);
+      }
+      summary.hidden = false; summary.focus();
+      return;
+    }
+    summary.hidden = true;
+    const inArea = zips.includes(form.zip.value);
+    done.querySelector('p').textContent = inArea
+      ? 'On a real site, your request would now go to the office. Nothing was sent.'
+      : 'That ZIP code is outside the area in this demo, so a real office would call to check. Nothing was sent.';
+    done.hidden = false; form.reset(); done.focus();
+  });
+</script>
