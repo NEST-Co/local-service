@@ -13,12 +13,12 @@ export const biz = {
   zips: ['45000', '45001', '45002', '45003', '45004', '45005', '45006'],
 };
 export type Service = {
-  slug: string; title: string; short: string; image: 'heating' | 'cooling' | 'maintenance';
+  slug: string; title: string; short: string; image: 'furnace' | 'ac' | 'maintenance' | 'install' | 'emergency';
   intro: string; signs: string[]; steps: string[]; faq: { q: string; a: string }[];
 };
 export const services: Service[] = [
   {
-    slug: 'furnace-repair', title: 'Furnace repair', image: 'heating',
+    slug: 'furnace-repair', title: 'Furnace repair', image: 'furnace',
     short: 'Fast diagnosis and repair when the heat stops working.',
     intro: 'A furnace that fails in January is an emergency. We find the problem first, tell you what it costs, then fix it only if you say yes.',
     signs: ['No heat, or heat that comes and goes', 'Banging, squealing or rattling from the furnace', 'The pilot light or igniter will not stay on', 'Higher heating bills with no change in how you use heat'],
@@ -29,7 +29,7 @@ export const services: Service[] = [
     ],
   },
   {
-    slug: 'ac-repair', title: 'Air conditioning repair', image: 'cooling',
+    slug: 'ac-repair', title: 'Air conditioning repair', image: 'ac',
     short: 'Same-day repairs for central air that is not cooling.',
     intro: 'When the house will not cool down, we want you back to normal as quickly as possible. Most repairs are done in one visit.',
     signs: ['Warm air from the vents', 'Water pooling near the indoor unit', 'The outdoor unit will not start or keeps shutting off', 'Strange smells when the air turns on'],
@@ -51,7 +51,7 @@ export const services: Service[] = [
     ],
   },
   {
-    slug: 'system-replacement', title: 'New system installation', image: 'heating',
+    slug: 'system-replacement', title: 'New system installation', image: 'install',
     short: 'A clear, written quote for a new furnace, air conditioner or both.',
     intro: 'Replacing a system is a big decision. We measure your home, explain the choices without pressure, and put the price in writing.',
     signs: ['The system is over 15 years old', 'Repairs are getting more frequent', 'Some rooms are too hot or too cold', 'You want lower energy bills'],
@@ -62,7 +62,7 @@ export const services: Service[] = [
     ],
   },
   {
-    slug: 'emergency-service', title: 'Emergency service', image: 'heating',
+    slug: 'emergency-service', title: 'Emergency service', image: 'emergency',
     short: 'A real person answers, any hour of any day.',
     intro: 'No heat on a freezing night, or a unit leaking through the ceiling, cannot wait until Monday. Call and we will send someone.',
     signs: ['No heat when it is below freezing', 'The smell of gas. Leave the house and call the gas company and 911 first', 'Water leaking from the system', 'Burning smell or smoke from the unit'],
@@ -73,3 +73,12 @@ export const services: Service[] = [
     ],
   },
 ];
+
+/** Describes each photo for people who cannot see it. */
+export const photoAlt: Record<string, string> = {
+  furnace: 'A technician with a flashlight inspecting a gas furnace in a clean basement.',
+  ac: 'A technician checking gauges on an outdoor air conditioning unit beside a house.',
+  maintenance: 'A technician with a checklist changing a furnace filter while a homeowner watches.',
+  install: 'Two technicians installing a new furnace and air handler in a utility room.',
+  emergency: 'A service van in a snowy driveway at night, a technician carrying a toolbox to a glowing front door.',
+};

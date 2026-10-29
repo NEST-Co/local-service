@@ -1,13 +1,18 @@
 ---
 import Service from '../layouts/Service.astro';
+import Photo from '../components/Photo.astro';
 import { biz } from '../data/business';
 ---
-<Service title="Service area" description="We serve Northfield, Maple Heights, Cedar Falls, Brookside, Oak Hollow and Stonebridge.">
-  <div class="wrap prose">
-    <h1>Service area</h1>
-    <p>We work in these towns:</p>
-    <ul class="checks">{biz.areas.map((a) => <li>{a}</li>)}</ul>
-    <p>Not sure if we cover your address? <a href={`tel:${biz.phoneHref}`}>Call {biz.phone}</a> or <a href="/quote">send a quote request</a> with your ZIP code, and we will tell you.</p>
-    <p>All towns here are invented for this concept site.</p>
+<Service title="Service area" description="We serve Northfield, Maple Heights, Cedar Falls, Brookside, Oak Hollow and Stonebridge." heading="Service area" lead="We work in six towns around Northfield.">
+  <div class="wrap body">
+    <div class="split">
+      <div>
+        <h2 style="margin-top:0">We work in these towns</h2>
+        <ul class="towns">{biz.areas.map((a) => <li>{a}</li>)}</ul>
+        <p>Not sure if we cover your address? <a href={`tel:${biz.phoneHref}`}>Call {biz.phone}</a> or <a href="/quote">send a quote request</a> with your ZIP code, and we will tell you.</p>
+        <p class="note">All towns here are invented for this concept site.</p>
+      </div>
+      <div class="frame"><Photo name="map" alt="A map of the service area with Northfield in the center, linked by roads to Maple Heights, Cedar Falls, Brookside, Oak Hollow and Stonebridge." sizes="(min-width: 900px) 45vw, 100vw" /></div>
+    </div>
   </div>
 </Service>

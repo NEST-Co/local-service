@@ -1,8 +1,10 @@
 ---
 import Base from './Base.astro';
 import Logo from '../components/Logo.astro';
+import Icon from '../components/Icon.astro';
 import { biz } from '../data/business';
-interface Props { title: string; description?: string; schema?: object[] }
+import '../styles/northfield.css';
+interface Props { title: string; description?: string; schema?: object[]; heading?: string; lead?: string; eyebrow?: string; crumb?: { href: string; label: string }[]; home?: boolean }
 const nav = [
   { href: '/services', label: 'Services' },
   { href: '/plans', label: 'Plans' },
@@ -10,7 +12,7 @@ const nav = [
   { href: '/about', label: 'About' },
   { href: '/quote', label: 'Get a quote' },
 ];
-const { title, description = `${title}: ${biz.name}, a fictional heating and cooling company.`, schema = [] } = Astro.props;
+const { title, description = `${title}: ${biz.name}, a fictional heating and cooling company.`, schema = [], heading, lead, eyebrow, crumb = [], home = false } = Astro.props;
 const path = Astro.url.pathname;
 const business = {
   '@context': 'https://schema.org', '@type': 'HVACBusiness',
@@ -26,8 +28,12 @@ const business = {
     {schema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
   </Fragment>
   <div slot="header" class="site-head">
+    <div class="topbar"><div class="wrap">
+      <span><strong>No heat or cooling?</strong> Emergency service, 24 hours a day.</span>
+      <span>Call <a href={`tel:${biz.phoneHref}`}>{biz.phone}</a></span>
+    </div></div>
     <div class="wrap bar">
-      <a class="brand" href="/"><Logo /><span>{biz.name}</span></a>
+      <a class="brand" href="/"><Logo /><span class="brand-text"><span class="brand-name">Northfield</span><span class="brand-sub">Heating &amp; Air</span></span></a>
       <nav aria-label="Main">
         <ul>
           {nav.map((n) => <li><a href={n.href} aria-current={path.startsWith(n.href) ? 'page' : undefined}>{n.label}</a></li>)}
@@ -36,63 +42,33 @@ const business = {
       </nav>
     </div>
   </div>
+  {!home && heading && (
+    <div class="page-head">
+      <div class="wrap">
+        <p class="crumbs"><a href="/">Home</a>{crumb.map((c) => <> <span aria-hidden="true">/</span> <a href={c.href}>{c.label}</a></>)} <span aria-hidden="true">/</span> <span>{eyebrow ?? title}</span></p>
+        <h1>{heading}</h1>
+        {lead && <p class="lead">{lead}</p>}
+      </div>
+    </div>
+  )}
   <slot />
   <div slot="footer" class="site-foot">
-    <div class="wrap two">
-      <p><strong>{biz.name}</strong><br />{biz.street}, {biz.city}, {biz.region} {biz.zip}<br />Phone: <a href={`tel:${biz.phoneHref}`}>{biz.phone}</a><br /><a href={`mailto:${biz.email}`}>{biz.email}</a></p>
-      <p>{biz.hours}<br /><a href="/contact">Contact</a> · <a href="/accessibility">Accessibility statement</a></p>
+    <div class="wrap foot-grid">
+      <div>
+        <p class="foot-name">{biz.name}</p>
+        <p>{biz.street}<br />{biz.city}, {biz.region} {biz.zip}</p>
+        <p>{biz.hours}</p>
+      </div>
+      <div>
+        <h2>Get in touch</h2>
+        <p><a href={`tel:${biz.phoneHref}`}>{biz.phone}</a></p>
+        <p><a href={`mailto:${biz.email}`}>{biz.email}</a></p>
+        <p><a href="/quote">Free quote</a></p>
+      </div>
+      <div>
+        <h2>Around the site</h2>
+        <ul>{nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}<li><a href="/contact">Contact</a></li><li><a href="/accessibility">Accessibility statement</a></li></ul>
+      </div>
     </div>
   </div>
 </Base>
-<style is:global>
-  :root { --brand:#14394D; --accent:#A83F00; --surface:#F3F6F8; --display:"Avenir Next","Trebuchet MS",system-ui,sans-serif; }
-  .btn{background:var(--accent)}
-  .btn.alt{background:var(--brand)}
-  .site-head{border-bottom:4px solid var(--brand)}
-  .bar{display:flex;flex-wrap:wrap;gap:.5rem 2rem;align-items:center;justify-content:space-between;padding-block:1rem}
-  .brand{display:inline-flex;align-items:center;gap:.6rem;font:800 1.35rem var(--display);color:var(--brand);text-decoration:none}
-  nav ul{display:flex;flex-wrap:wrap;gap:.25rem 1.1rem;list-style:none;margin:0;padding:0;align-items:center}
-  nav a:not(.btn){display:inline-block;padding:.6rem .25rem;color:var(--ink);font-weight:600}
-  nav a[aria-current="page"]{color:var(--brand);text-decoration-thickness:3px}
-  nav .btn.call{padding:.6rem 1rem;font-size:1rem}
-  main{padding-block:2rem 4rem}
-  .site-foot{background:var(--surface);border-top:1px solid var(--line);padding-block:2rem}
-  .two{display:grid;gap:1.5rem 2.5rem;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-  .hero{background:var(--surface);border-bottom:1px solid var(--line)}
-  .hero .wrap{display:grid;gap:2rem;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));align-items:center;padding-block:2.5rem}
-  .hero h1{font-size:clamp(2rem,5vw,3rem);margin:0 0 .6rem}
-  .hero p{font-size:1.2rem}
-  .hero img,.card img,.pic{border-radius:10px;width:100%;height:auto;display:block}
-  .actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.25rem}
-  .cards{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));list-style:none;padding:0}
-  .card{border:1px solid var(--line);border-radius:10px;overflow:hidden;max-width:none;display:flex;flex-direction:column}
-  .card .body{padding:1rem 1.1rem 1.25rem}
-  .card h3{margin:.1rem 0 .3rem}
-  .prose{max-width:var(--measure)}
-  .prose h2{margin-top:2rem}
-  .checks{padding-left:1.3rem}
-  .badges{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;list-style:none;padding:0;font-weight:700}
-  .badges li{max-width:none}
-  .plans{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
-  .plan{border:2px solid var(--line);border-radius:10px;padding:1.25rem}
-  .plan.featured{border-color:var(--brand)}
-  .price{font:800 2rem var(--display);color:var(--brand);margin:.25rem 0}
-  details{border-bottom:1px solid var(--line);padding:.75rem 0}
-  summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
-  form{display:grid;gap:1.1rem;max-width:36rem}
-  label,legend{font-weight:700;display:block;margin-bottom:.25rem}
-  .hint{color:var(--muted);font-size:.95rem;margin:0 0 .25rem;font-weight:400}
-  input[type=text],input[type=tel],input[type=email],select,textarea{font:inherit;width:100%;min-height:44px;padding:.5rem .7rem;border:2px solid var(--ink);border-radius:6px;background:var(--bg);color:var(--ink)}
-  input[aria-invalid=true],select[aria-invalid=true]{border-color:#B42318;border-width:3px}
-  fieldset{border:0;padding:0;margin:0}
-  .choice{display:flex;gap:.6rem;align-items:center;min-height:44px}
-  .choice input{width:1.5rem;height:1.5rem;margin:0}
-  .choice label{margin:0;font-weight:400}
-  .error{color:#B42318;font-weight:700;margin:.25rem 0 0}
-  .summary{border:3px solid #B42318;border-radius:8px;padding:1rem 1.25rem;max-width:36rem;margin-bottom:1.25rem}
-  .summary h2{margin:0 0 .5rem;font-size:1.2rem}
-  .success{border:3px solid #2F6B46;background:#E4F0E7;border-radius:8px;padding:1rem 1.25rem;max-width:36rem}
-  .urgent{border-left:6px solid var(--accent);background:#FFF3EC;padding:.8rem 1rem;max-width:36rem}
-  .hp{position:absolute;left:-9999px}
-  @media print{.skip-link,.concept-note,nav{display:none}}
-</style>

@@ -1,7 +1,7 @@
 ---
 import Service from '../../layouts/Service.astro';
 import Photo from '../../components/Photo.astro';
-import { biz, services } from '../../data/business';
+import { biz, services, photoAlt } from '../../data/business';
 export function getStaticPaths() {
   return services.map((s) => ({ params: { slug: s.slug }, props: { s } }));
 }
@@ -14,25 +14,26 @@ const schema = [
     { '@type': 'ListItem', position: 3, name: s.title } ] },
 ];
 ---
-<Service title={s.title} description={`${s.title} in ${biz.city} and nearby towns. ${s.short}`} schema={schema}>
-  <div class="wrap">
-    <nav aria-label="Breadcrumb"><p><a href="/">Home</a> &rsaquo; <a href="/services">Services</a> &rsaquo; <span aria-current="page">{s.title}</span></p></nav>
+<Service title={s.title} description={`${s.title} in ${biz.city} and nearby towns. ${s.short}`} schema={schema} heading={s.title} lead={s.intro} crumb={[{ href: '/services', label: 'Services' }]} eyebrow={s.title}>
+  <div class="wrap body">
     <div class="two">
       <div class="prose">
-        <h1>{s.title}</h1>
-        <p>{s.intro}</p>
-        <h2>Signs you may need this</h2>
+        <h2 style="margin-top:0">Signs you may need this</h2>
         <ul class="checks">{s.signs.map((x) => <li>{x}</li>)}</ul>
         <h2>How it works</h2>
         <ol class="checks">{s.steps.map((x) => <li>{x}</li>)}</ol>
         <h2>Common questions</h2>
         {s.faq.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}
-        <div class="actions">
-          <a class="btn" href="/quote">Get a free quote</a>
-          <a class="btn alt" href={`tel:${biz.phoneHref}`}>Call {biz.phone}</a>
-        </div>
       </div>
-      <Photo name={s.image} alt="" />
+      <aside class="aside" aria-label="Photo and quick contact">
+        <div class="frame"><Photo name={s.image} alt={photoAlt[s.image]} sizes="(min-width: 900px) 30vw, 100vw" /></div>
+        <div class="panel">
+          <h2>Ready when you are</h2>
+          <p>Get a free quote, or call us any time.</p>
+          <p><a class="btn" href="/quote">Get a free quote</a></p>
+          <p style="margin:0"><a class="btn alt" href={`tel:${biz.phoneHref}`}>Call {biz.phone}</a></p>
+        </div>
+      </aside>
     </div>
   </div>
 </Service>

@@ -1,17 +1,16 @@
 ---
 import Service from '../layouts/Service.astro';
+import Photo from '../components/Photo.astro';
 ---
-<Service title="About us" description="About Northfield Heating & Air.">
-  <div class="wrap prose">
-    <h1>About Northfield Heating &amp; Air</h1>
-    <p>Northfield Heating &amp; Air is a fictional company made up to show Nest Co.'s website work. The details here are invented.</p>
-    <h2>How we work</h2>
-    <ul class="checks">
-      <li>We explain the problem in plain language.</li>
-      <li>You get the price in writing before any work starts.</li>
-      <li>We clean up and test before we leave.</li>
+<Service title="About us" description="About Northfield Heating & Air." heading="About Northfield Heating & Air" lead="Northfield Heating & Air is a fictional company made up to show Nest Co.'s website work. The details here are invented.">
+  <div class="wrap body">
+    <div class="frame" style="border-radius:22px;overflow:hidden;border:1px solid var(--line);margin-bottom:3rem;max-width:960px"><Photo name="team" alt="Four team members, three technicians in teal shirts and an office coordinator, smiling in front of a service van and brick shop." sizes="(min-width: 1000px) 960px, 100vw" /></div>
+    <h2 style="margin-top:0;color:var(--brand-deep)">How we work</h2>
+    <ul class="steps" style="margin-bottom:2.5rem">
+      <li><h3>We explain it plainly</h3><p>We explain the problem in plain language.</p></li>
+      <li><h3>Price first</h3><p>You get the price in writing before any work starts.</p></li>
+      <li><h3>Clean and tested</h3><p>We clean up and test before we leave.</p></li>
     </ul>
-    <h2>What a real page would add</h2>
-    <p>A real company would put its licence numbers, real team photos and genuine customer reviews here. This concept site leaves them out rather than invent them.</p>
+    <div class="panel prose"><h2>What a real page would add</h2><p style="margin:0">A real company would put its licence numbers, real team photos and genuine customer reviews here. This concept site leaves them out rather than invent them.</p></div>
   </div>
 </Service>

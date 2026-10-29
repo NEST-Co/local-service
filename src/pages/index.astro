@@ -1,31 +1,106 @@
 ---
 import Service from '../layouts/Service.astro';
 import Photo from '../components/Photo.astro';
+import Icon from '../components/Icon.astro';
 import { biz, services } from '../data/business';
+const trust = [
+  { icon: 'shield', t: 'Licensed and insured' },
+  { icon: 'tag', t: 'Price in writing first' },
+  { icon: 'clock', t: 'Emergency service 24 hours' },
+  { icon: 'wrench', t: 'Two-year repair warranty' },
+];
 ---
-<Service title="Heating and air conditioning in Northfield" description="Furnace and air conditioning repair, tune-ups and installation in Northfield and nearby towns. Call or request a quote online.">
-  <div class="hero"><div class="wrap">
-    <div>
-      <h1>Heat and cooling that works when you need it</h1>
-      <p>Repairs, tune-ups and new systems for homes in Northfield and five nearby towns. Clear prices in writing before any work begins.</p>
-      <div class="actions">
-        <a class="btn" href="/quote">Get a free quote</a>
-        <a class="btn alt" href={`tel:${biz.phoneHref}`}>Call {biz.phone}</a>
+<Service home title="Heating and air conditioning in Northfield" description="Furnace and air conditioning repair, tune-ups and installation in Northfield and nearby towns. Call or request a quote online.">
+  <section class="hero" aria-labelledby="hero-h">
+    <Photo name="hero" class="hero-bg" eager sizes="(min-width: 900px) 60vw, 100vw" />
+    <div class="wrap">
+      <div class="hero-copy">
+        <p class="eyebrow">Heating &amp; cooling · Northfield, Ohio</p>
+        <h1 id="hero-h">Heat and cooling that works when you need it.</h1>
+        <p class="sub">Repairs, tune-ups and new systems for homes in Northfield and five nearby towns. Clear prices in writing before any work begins.</p>
+        <div class="actions">
+          <a class="btn" href={`tel:${biz.phoneHref}`}>Call {biz.phone}</a>
+          <a class="btn ghost" href="/services">See our services</a>
+        </div>
+        <p class="hours">{biz.hours}</p>
       </div>
     </div>
-    <Photo name="hero" alt="A small house with an outdoor air conditioning unit beside it." eager />
-  </div></div>
-  <div class="wrap">
-    <ul class="badges" aria-label="Why customers choose us">
-      <li>Licensed and insured</li><li>Price in writing first</li><li>Emergency service 24 hours</li><li>Two-year repair warranty</li>
-    </ul>
-    <h2>What we do</h2>
-    <ul class="cards">{services.map((s) => (
-      <li class="card"><Photo name={s.image} sizes="(min-width: 700px) 33vw, 100vw" />
-        <div class="body"><h3><a href={`/services/${s.slug}`}>{s.title}</a></h3><p>{s.short}</p></div></li>
-    ))}</ul>
-    <h2>Where we work</h2>
-    <p>We serve {biz.areas.slice(0, -1).join(', ')} and {biz.areas.at(-1)}. <a href="/service-area">Check your area</a>.</p>
-    <p>The badges above and the warranty are sample claims for this fictional company.</p>
+  </section>
+
+  <div class="wrap quote-wrap">
+    <form class="quote-bar" action="/quote" method="get" aria-labelledby="qm-h">
+      <div class="qb-intro"><h2 id="qm-h">Get a free quote</h2><p>We reply within one business day.</p></div>
+      <div>
+        <label for="qm-service">What do you need?</label>
+        <select id="qm-service" name="service">
+          <option value="">Choose one</option>
+          {services.filter((s) => s.slug !== 'emergency-service').map((s) => <option>{s.title}</option>)}
+          <option>Not sure</option>
+        </select>
+      </div>
+      <div>
+        <label for="qm-zip">ZIP code</label>
+        <input id="qm-zip" name="zip" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="5" />
+      </div>
+      <button class="btn" type="submit">Start my quote</button>
+    </form>
   </div>
+
+  <div class="trust"><div class="wrap">
+    <ul aria-label="Why customers choose us">{trust.map((t) => <li><span class="ico"><Icon name={t.icon} /></span>{t.t}</li>)}</ul>
+  </div></div>
+
+  <section class="section" aria-labelledby="what-h">
+    <div class="wrap">
+      <div class="sec-head"><h2 id="what-h">What we do</h2><p>From a furnace that quit in January to a new system for the whole house.</p></div>
+      <ul class="bento">{services.map((s) => (
+        <li><article class="card"><Photo name={s.image} sizes="(min-width: 900px) 40vw, 100vw" />
+          <div class="body"><h3><a href={`/services/${s.slug}`}>{s.title}</a></h3><p>{s.short}</p><span class="more" aria-hidden="true">Learn more →</span></div></article></li>
+      ))}</ul>
+    </div>
+  </section>
+
+  <section class="section tint" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="sec-head"><h2 id="how-h">How we work</h2><p>No surprises on the bill, and no mess left behind.</p></div>
+      <ol class="steps">
+        <li><h3>We explain it plainly</h3><p>The technician shows you what they found and explains the problem in plain language.</p></li>
+        <li><h3>You get the price in writing</h3><p>You see the price before any work starts, and you decide.</p></li>
+        <li><h3>We clean up and test</h3><p>We test the system and tidy up before we leave.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="plan-h">
+    <div class="wrap split">
+      <div class="frame"><Photo name="maintenance" alt="A technician with a checklist changing a furnace filter while a homeowner watches." sizes="(min-width: 900px) 45vw, 100vw" /></div>
+      <div>
+        <p class="eyebrow" style="color:var(--accent)">Maintenance plans</p>
+        <h2 id="plan-h">Two tune-ups a year keep small problems small.</h2>
+        <p>One in spring for cooling, one in fall for heating, each with a written checklist you keep.</p>
+        <div class="mini-plans"><div><strong>Basic</strong><span>$189</span><small>a year</small></div><div><strong>Plus</strong><span>$279</span><small>a year, with priority scheduling</small></div></div>
+        <p class="note">Prices are invented for this concept site.</p>
+        <a class="btn alt" href="/plans">Compare plans</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section tint" aria-labelledby="area-h">
+    <div class="wrap split flip">
+      <div>
+        <h2 id="area-h">Where we work</h2>
+        <p>We serve homes in six towns around Northfield.</p>
+        <ul class="towns">{biz.areas.map((a) => <li>{a}</li>)}</ul>
+        <a class="btn alt" href="/service-area">Check your area</a>
+      </div>
+      <div class="frame"><Photo name="map" alt="A map of the service area with Northfield in the center, linked by roads to Maple Heights, Cedar Falls, Brookside, Oak Hollow and Stonebridge." sizes="(min-width: 900px) 45vw, 100vw" /></div>
+    </div>
+  </section>
+
+  <section class="cta-band" aria-labelledby="cta-h">
+    <div class="wrap">
+      <div><h2 id="cta-h">No heat or cooling right now?</h2><p>A real person answers, any hour of any day. The badges and the warranty on this page are sample claims for this fictional company.</p></div>
+      <div><a class="big" href={`tel:${biz.phoneHref}`}>{biz.phone}</a><a class="btn light" href="/quote">Or request a free quote</a></div>
+    </div>
+  </section>
 </Service>

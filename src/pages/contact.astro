@@ -1,11 +1,16 @@
 ---
 import Service from '../layouts/Service.astro';
+import Icon from '../components/Icon.astro';
 import { biz } from '../data/business';
 ---
-<Service title="Contact" description="Phone, email, address and hours for Northfield Heating & Air.">
-  <div class="wrap prose">
-    <h1>Contact us</h1>
-    <p><strong>Phone:</strong> <a href={`tel:${biz.phoneHref}`}>{biz.phone}</a><br /><strong>Email:</strong> <a href={`mailto:${biz.email}`}>{biz.email}</a><br /><strong>Address:</strong> {biz.street}, {biz.city}, {biz.region} {biz.zip}<br /><strong>Hours:</strong> {biz.hours}</p>
+<Service title="Contact" description="Phone, email, address and hours for Northfield Heating & Air." heading="Contact us" lead="Call any time for emergencies. For everything else, we reply within one business day.">
+  <div class="wrap body">
+    <div class="info-grid">
+      <div class="panel"><span class="ico"><Icon name="phone" /></span><h2>Phone</h2><p style="margin:0"><a href={`tel:${biz.phoneHref}`}>{biz.phone}</a></p></div>
+      <div class="panel"><span class="ico"><Icon name="mail" /></span><h2>Email</h2><p style="margin:0"><a href={`mailto:${biz.email}`}>{biz.email}</a></p></div>
+      <div class="panel"><span class="ico"><Icon name="pin" /></span><h2>Address</h2><p style="margin:0">{biz.street}<br />{biz.city}, {biz.region} {biz.zip}</p></div>
+      <div class="panel"><span class="ico"><Icon name="clock" /></span><h2>Hours</h2><p style="margin:0">{biz.hours}</p></div>
+    </div>
     <p>For a quote, use the <a href="/quote">quote form</a>.</p>
     <p class="urgent"><strong>Smell gas?</strong> Leave the house and call 911 and your gas company from outside.</p>
   </div>

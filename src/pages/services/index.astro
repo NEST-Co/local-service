@@ -3,12 +3,11 @@ import Service from '../../layouts/Service.astro';
 import Photo from '../../components/Photo.astro';
 import { services } from '../../data/business';
 ---
-<Service title="Services" description="Furnace repair, air conditioning repair, maintenance plans, new systems and emergency service.">
-  <div class="wrap">
-    <h1>Services</h1>
-    <ul class="cards">{services.map((s) => (
-      <li class="card"><Photo name={s.image} sizes="(min-width: 700px) 33vw, 100vw" />
-        <div class="body"><h2 style="font-size:1.3rem;margin:.1rem 0 .3rem"><a href={`/services/${s.slug}`}>{s.title}</a></h2><p>{s.short}</p></div></li>
+<Service title="Services" description="Furnace repair, air conditioning repair, maintenance plans, new systems and emergency service." eyebrow="Services" heading="Our services" lead="Repair, tune-ups, installation and emergency help, with the price in writing first.">
+  <div class="wrap body">
+    <ul class="bento">{services.map((s) => (
+      <li><article class="card"><Photo name={s.image} sizes="(min-width: 900px) 40vw, 100vw" />
+        <div class="body"><h2><a href={`/services/${s.slug}`}>{s.title}</a></h2><p>{s.short}</p><span class="more" aria-hidden="true">Learn more →</span></div></article></li>
     ))}</ul>
   </div>
 </Service>

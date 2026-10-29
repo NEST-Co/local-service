@@ -1,12 +1,17 @@
 ---
 import { Picture } from 'astro:assets';
-import hero from '../assets/hero.png';
-import heating from '../assets/heating.png';
-import cooling from '../assets/cooling.png';
-import maintenance from '../assets/maintenance.png';
-interface Props { name: 'hero' | 'heating' | 'cooling' | 'maintenance'; alt?: string; eager?: boolean; sizes?: string }
-const { name, alt = '', eager = false, sizes = '(min-width: 700px) 50vw, 100vw' } = Astro.props;
-const images = { hero, heating, cooling, maintenance };
+import hero from '../assets/hero.jpg';
+import furnace from '../assets/furnace.jpg';
+import ac from '../assets/ac.jpg';
+import maintenance from '../assets/maintenance.jpg';
+import install from '../assets/install.jpg';
+import emergency from '../assets/emergency.jpg';
+import team from '../assets/team.jpg';
+import map from '../assets/map.png';
+interface Props { name: 'hero' | 'furnace' | 'ac' | 'maintenance' | 'install' | 'emergency' | 'team' | 'map'; alt?: string; eager?: boolean; sizes?: string; class?: string }
+const { name, alt = '', eager = false, sizes = '(min-width: 700px) 50vw, 100vw', class: cls = '' } = Astro.props;
+const images = { hero, furnace, ac, maintenance, install, emergency, team, map };
+const widths = name === 'hero' ? [800, 1200, 1600] : [400, 800, 1200];
 ---
-<Picture src={images[name]} alt={alt} formats={['avif', 'webp']} widths={[400, 800, 1200]} sizes={sizes}
-  loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'high' : 'auto'} decoding={eager ? 'sync' : 'async'} class="pic" />
+<Picture src={images[name]} alt={alt} formats={['avif', 'webp']} widths={widths} sizes={sizes}
+  loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'high' : 'auto'} decoding={eager ? 'sync' : 'async'} class={`pic ${cls}`.trim()} />

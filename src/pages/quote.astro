@@ -1,13 +1,13 @@
 ---
 import Service from '../layouts/Service.astro';
+import Photo from '../components/Photo.astro';
 import { biz, services } from '../data/business';
 ---
-<Service title="Get a free quote" description="Tell us what is wrong and where you are. We reply within one business day.">
-  <div class="wrap">
-    <h1>Get a free quote</h1>
-    <p>Tell us what you need. We reply within one business day. <strong>This is a concept site: nothing you type is sent anywhere.</strong></p>
-    <p class="urgent"><strong>No heat or cooling right now?</strong> Please call <a href={`tel:${biz.phoneHref}`}>{biz.phone}</a> instead. We answer 24 hours a day.</p>
-
+<Service title="Get a free quote" description="Tell us what is wrong and where you are. We reply within one business day." heading="Get a free quote" lead="Tell us what you need. We reply within one business day.">
+  <div class="wrap body">
+    <div class="two">
+    <div>
+    <p class="urgent" style="margin-bottom:1.5rem"><strong>This is a concept site:</strong> nothing you type is sent anywhere.</p>
     <div id="summary" class="summary" role="alert" tabindex="-1" hidden>
       <h2 id="summary-title">Please fix these problems</h2>
       <ul id="summary-list"></ul>
@@ -17,6 +17,7 @@ import { biz, services } from '../data/business';
       <p>On a real site, your request would now go to the office. Nothing was sent.</p>
     </div>
 
+    <div class="formcard">
     <form id="quote" novalidate>
       <p class="hint">Fields marked required must be filled in.</p>
       <div class="hp" aria-hidden="true"><label for="company">Leave this empty</label><input id="company" name="company" type="text" tabindex="-1" autocomplete="off" /></div>
@@ -63,10 +64,22 @@ import { biz, services } from '../data/business';
       </div>
       <div><button class="btn" type="submit">Send quote request</button></div>
     </form>
+    </div>
+    </div>
+    <aside class="aside" aria-label="Need help now?">
+      <div class="panel"><h2>No heat or cooling right now?</h2><p>Please call instead. We answer 24 hours a day.</p><p style="margin:0"><a class="btn" href={`tel:${biz.phoneHref}`}>Call {biz.phone}</a></p></div>
+      <div class="frame"><Photo name="emergency" alt="A service van in a snowy driveway at night, a technician carrying a toolbox to a glowing front door." sizes="(min-width: 900px) 30vw, 100vw" /></div>
+    </aside>
+    </div>
   </div>
 </Service>
 <script define:vars={{ zips: biz.zips }}>
   const form = document.getElementById('quote');
+  // Prefill from the quick-quote card on the home page.
+  const q = new URLSearchParams(location.search);
+  if (/^\d{5}$/.test(q.get('zip') || '')) form.zip.value = q.get('zip');
+  const wanted = q.get('service');
+  if (wanted) for (const o of form.service.options) if (o.text === wanted) form.service.value = o.value || o.text;
   const summary = document.getElementById('summary');
   const list = document.getElementById('summary-list');
   const done = document.getElementById('done');
@@ -86,7 +99,12 @@ import { biz, services } from '../data/business';
     err ? el.setAttribute('aria-invalid', 'true') : el.removeAttribute('aria-invalid');
     return err;
   }
-  for (const id of Object.keys(rules)) document.getElementById(id).addEventListener('blur', () => { if (document.getElementById(id).value || document.getElementById(id).hasAttribute('aria-invalid')) check(id); });
+  // Re-check a field when you leave it, but not while the Send button is being pressed: a message
+  // disappearing would shift the page and the click would miss the button. Submitting re-checks everything.
+  let pressing = false;
+  form.querySelector('button[type=submit]').addEventListener('pointerdown', () => { pressing = true; });
+  document.addEventListener('pointerup', () => setTimeout(() => { pressing = false; }, 0));
+  for (const id of Object.keys(rules)) document.getElementById(id).addEventListener('blur', () => { if (pressing) return; if (document.getElementById(id).value || document.getElementById(id).hasAttribute('aria-invalid')) check(id); });
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
